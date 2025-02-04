@@ -2,7 +2,7 @@ import logging
 
 from faster_whisper import WhisperModel
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Audio:
@@ -24,5 +24,5 @@ class Audio:
             segments, _ = self.model.transcribe(audio_file)
             return "".join([segment.text for segment in segments])
         except Exception as e:
-            log.error("Error during transcription audio: %s", e)
+            logger.error("Error during transcription audio: %s", e)
             return None
