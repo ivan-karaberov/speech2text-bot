@@ -1,6 +1,11 @@
+from pathlib import Path
+
 from pydantic import Field
 from pydantic.types import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BASE_DIR = Path(__file__).resolve().parent
 
 
 class BaseConfig(BaseSettings):
@@ -17,6 +22,7 @@ class TelegramConfig(BaseConfig):
 
 class Config(BaseSettings):
     tg: TelegramConfig = Field(default_factory=TelegramConfig)
-    
+    templates_dir: Path = BASE_DIR / "templates"
+
 
 config = Config()
