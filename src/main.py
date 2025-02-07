@@ -2,7 +2,7 @@ import asyncio
 import logging
 import traceback
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 
 import handlers
@@ -19,6 +19,8 @@ COMMAND_HANDLERS = {
 def register_message_handlers(dp: Dispatcher) -> None:
     for key, value in COMMAND_HANDLERS.items():
         dp.message.register(value, Command(key))
+
+    dp.message.register(handlers.audio_message, F.audio | F.voice)
 
 
 async def main() -> None:

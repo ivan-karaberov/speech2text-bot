@@ -6,6 +6,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+DATA_DIR.mkdir(exist_ok=True)
 
 
 class BaseConfig(BaseSettings):
@@ -23,6 +25,7 @@ class TelegramConfig(BaseConfig):
 class Config(BaseSettings):
     tg: TelegramConfig = Field(default_factory=TelegramConfig)
     templates_dir: Path = BASE_DIR / "templates"
+    data_dir: Path = DATA_DIR
 
 
 config = Config()
