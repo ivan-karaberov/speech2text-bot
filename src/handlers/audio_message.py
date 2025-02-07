@@ -15,12 +15,16 @@ async def audio_message(message: Message, bot: Bot) -> None:
         await message.answer("Не удалось распознать аудиофайл.")
         return None
     
+    if audio.file_size >= config.max_file_size_mb:
+        await message.answer(f"Ошибка: размер файла превышает {config.max_file_size_mb / 1024 / 1024} Mb")
+        return None
+
     file = await bot.get_file(audio.file_id)
     file_path = config.data_dir / f"{message.from_user.id}_{uuid.uuid4()}.ogg"
+    response = await message.answer("В обработке...")
 
     await bot.download(file, destination=file_path)
 
-    response = await message.answer("В обработке...")
 
     transcribed_text = Audio().transcribe_audio(file_path)
     os.remove(file_path)

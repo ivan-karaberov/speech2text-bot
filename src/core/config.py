@@ -26,6 +26,7 @@ class Config(BaseSettings):
     tg: TelegramConfig = Field(default_factory=TelegramConfig)
     templates_dir: Path = BASE_DIR / "templates"
     data_dir: Path = DATA_DIR
+    max_file_size_mb: int = 100 * 1024 * 1024 # 100 Mb
 
 
 config = Config()
