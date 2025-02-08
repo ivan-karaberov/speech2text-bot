@@ -21,6 +21,7 @@ def register_message_handlers(dp: Dispatcher) -> None:
         dp.message.register(value, Command(key))
 
     dp.message.register(handlers.audio_message, F.audio | F.voice)
+    dp.message.register(handlers.video_message, F.video | F.video_note)
 
 
 async def main() -> None:
