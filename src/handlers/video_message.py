@@ -20,17 +20,17 @@ async def video_message(message: Message, bot: Bot) -> None:
     video = message.video or message.video_note
 
     if not video:
-        await message.answer("Не удалось распознать видеофайл.")
+        await message.reply("Не удалось распознать видеофайл.")
         return None
 
     if video.file_size >= config.max_file_size_mb * 1024 * 1024:
-        await message.answer(f"Ошибка: размер файла превышает {config.max_file_size_mb} Mb")
+        await message.reply(f"Ошибка: размер файла превышает {config.max_file_size_mb} Mb")
         return None
     
     file_path = config.data_dir / f"{message.from_user.id}_{uuid.uuid4()}.mp4"
     try:
         file = await bot.get_file(video.file_id)
-        response = await message.answer("В обработке...")
+        response = await message.reply("В обработке...")
 
         await bot.download(file, destination=file_path, timeout=60)
 
@@ -38,10 +38,10 @@ async def video_message(message: Message, bot: Bot) -> None:
             future = executor.submit(transcribe_video, file_path)
             transcribed_text = await asyncio.wrap_future(future)
 
-        await message.answer(transcribed_text)
+        await message.reply(transcribed_text)
     except Exception as e:
         logger.error("Failed transcribed video message > %s", e)
-        await message.answer("Произошла ошибка при обработке видеосообщения.")
+        await message.reply("Произошла ошибка при обработке видеосообщения.")
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
