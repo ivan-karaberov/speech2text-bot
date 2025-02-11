@@ -1,7 +1,7 @@
 import os
 import logging
 
-from moviepy import VideoFileClip # type: ignore
+from moviepy import VideoFileClip  # type: ignore
 
 from services.audio import Audio
 
@@ -19,7 +19,7 @@ class Video:
             return transcribed_text
 
         return None
-    
+
     def extract_audio(self, video_file: str) -> str | None:
         audio_file = None
 

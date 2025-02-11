@@ -35,5 +35,5 @@ async def main() -> None:
 if __name__ == "__main__":
     try:
         asyncio.run(main())
-    except Exception as e:
+    except Exception:
         logger.warning(traceback.format_exc())
