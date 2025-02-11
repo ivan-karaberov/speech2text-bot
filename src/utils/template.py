@@ -30,6 +30,6 @@ def _get_template_env() -> jinja2.Environment:
             autoescape=True,
         )
 
-        _get_template_env.template_env = env
+        setattr(_get_template_env, "template_env", env)
 
     return _get_template_env.template_env

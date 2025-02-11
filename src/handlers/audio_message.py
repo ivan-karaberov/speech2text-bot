@@ -13,7 +13,7 @@ from services.audio import Audio
 logger = logging.getLogger(__name__)
 
 def transcribe_audio(file_path: str) -> str:
-    return Audio().transcribe_audio(file_path)
+    return Audio().transcribe_audio(file_path) or "None"
 
 
 async def audio_message(message: Message, bot: Bot) -> None:
@@ -22,12 +22,14 @@ async def audio_message(message: Message, bot: Bot) -> None:
     if not audio:
         await message.reply("Не удалось распознать аудиофайл.")
         return None
-    
-    if audio.file_size >= config.max_file_size_mb * 1024 * 1024:
+
+    file_size = audio.file_size or 0
+    if file_size >= config.max_file_size_mb * 1024 * 1024:
         await message.reply(f"Ошибка: размер файла превышает {config.max_file_size_mb} Mb")
         return None
 
-    file_path = config.data_dir / f"{message.from_user.id}_{uuid.uuid4()}.ogg"
+    user_id = message.from_user.id if message.from_user else 0
+    file_path = config.data_dir / f"{user_id}_{uuid.uuid4()}.ogg"
     
     try:
         file = await bot.get_file(audio.file_id)
@@ -35,7 +37,7 @@ async def audio_message(message: Message, bot: Bot) -> None:
         await bot.download(file, destination=file_path, timeout=60)
 
         with ProcessPoolExecutor(max_workers=5) as executor:
-            future = executor.submit(transcribe_audio, file_path)
+            future = executor.submit(transcribe_audio, str(file_path))
             transcribed_text = await asyncio.wrap_future(future)
 
         await message.reply(transcribed_text)
